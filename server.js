@@ -16,6 +16,8 @@ const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
 
 const app = express();
+app.use(helmet.dnsPrefetchControl({ allow: false }));
+app.use(helmet.frameguard({ action: 'sameorigin' }));
 // This hides where your users are coming from and adds general security
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(helmet.contentSecurityPolicy({
