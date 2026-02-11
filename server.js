@@ -3,12 +3,28 @@ require('dotenv').config();
 const express     = require('express');
 const bodyParser  = require('body-parser');
 const cors        = require('cors');
+const helmet      = require('helmet'); // ADD THIS
+const mongoose    = require('mongoose'); // ADD THIS
+
+// Connect to your DB (Crucial!)
+mongoose.connect(process.env.DB)
+  .then(() => console.log("✅ DB Connected"))
+  .catch(err => console.log(err));
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
 
 const app = express();
+// This hides where your users are coming from and adds general security
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'"],
+  }
+}));
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -32,6 +48,7 @@ app.route('/')
   .get(function (req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
   });
+  
 
 //For FCC testing purposes
 fccTestingRoutes(app);
