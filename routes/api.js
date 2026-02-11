@@ -14,10 +14,10 @@ const ThreadSchema = new Schema({
   board: { type: String, required: true },
   text: { type: String, required: true },
   created_on: { type: Date, default: Date.now },
-  bumped_on: { type: Date, default: Date.now },
+  bumped_on: { type: Date, default: function () { return this.created_on; } },
   reported: { type: Boolean, default: false },
   delete_password: { type: String, required: true },
-  replies: [ReplySchema]
+  replies: { type: [ReplySchema], default: [] }
 });
 
 const Thread = mongoose.model('Thread', ThreadSchema);
