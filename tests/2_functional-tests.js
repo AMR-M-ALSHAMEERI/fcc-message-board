@@ -91,6 +91,16 @@ suite('Functional Tests', function() {
         });
     });
 
+    test('Deleting a reply with incorrect password: DELETE request to /api/replies/{board}', function(done) {
+      chai.request(server)
+        .delete('/api/replies/testBoard')
+        .send({ thread_id: testThreadId, reply_id: testReplyId, delete_password: 'wrong' })
+        .end(function(err, res) {
+          assert.equal(res.text, 'incorrect password');
+          done();
+        });
+    });
+
     test('Deleting a reply with correct password: DELETE request to /api/replies/{board}', function(done) {
       chai.request(server)
         .delete('/api/replies/testBoard')
